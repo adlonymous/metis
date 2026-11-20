@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.env
+.env.*
+!.env.example
+outputs/
+web/node_modules/
+web/dist/
+.impeccable/
+docs/setup_notes.md
+dist/
+experiments/runs/
+*.safetensors
+*.pt
+*.pth

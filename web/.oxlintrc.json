@@ -1,0 +1,3 @@
+{
+  "ignorePatterns": ["src/dataset-contract.d.ts", ".agent/**", ".agents/**", ".claude/**", ".codex/**", ".continue/**", ".cursor/**", ".gemini/**", ".opencode/**", ".pi/**", ".roo/**", ".windsurf/**"]
+}

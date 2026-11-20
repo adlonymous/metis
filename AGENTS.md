@@ -1,0 +1,23 @@
+# Metis
+
+- See `README.md` for the project's purpose, current capabilities, and limitations.
+- Revise this file whenever meaningful changes affect project structure, commands, or verified compatibility facts.
+- The public Verifiers taskset ID and runtime package are `metis` under `src/metis/`. Shared authoring code and the original simulator remain under `src/paid_tool_rl/`. Hatch bundles the workspace and CC0 license into wheels.
+- Use Python 3.12 and `uv`. Verifiers is pinned by Git SHA in `pyproject.toml`; `uv.lock` locks transitive dependencies.
+- Use Verifiers v1 tasksets and toolsets, not legacy v0 environments. Verify APIs in the pinned source before changing adapters.
+- Run `scripts/setup` to sync Python/npm dependencies and generate frontend types. Run `scripts/editor` for the loopback-only editor at `http://127.0.0.1:8765`.
+- Run `scripts/check` for lint/types/tests, frontend build, local Verifiers setup/noop checks, and the native MCP smoke run. `scripts/smoke` uses a scripted reference endpoint, not an LLM or training run. `scripts/demo` is the original simulator demo.
+- Authoring contracts live in `dataset_schema.py`; regenerate `web/src/dataset-contract.d.ts` with `scripts/generate-types` after schema changes. Never edit generated types by hand.
+- `datasets/workspace.json` has 1,000 synthetic listings and six runnable smoke tasks. Drafts are excluded; split labels are editable, not a frozen benchmark. The runtime searches all listings; `resource_ids` identifies task-specific response fixtures, not a public allowlist.
+- `scripts/generate-index` rebalances untouched, unlinked generated listings to cover the 200 templates in `datasets/resource_capabilities{,_extended}.json` across 50 categories. It preserves authored/edited/task-linked resources and all tasks, and does not generate task response fixtures.
+- The React/Vite frontend lives in `web/`. Its lint command uses standard Oxlint without vendored plugins.
+- Keep the editor on loopback with no live endpoint execution. Its API is for trusted local authors, not agents. Validate data before atomic writes and preserve revision-conflict protection.
+- For UI work, read `PRODUCT.md` and `DESIGN.md`, plus a local surface brief if present. The runtime/editor initial observation is `AgentObservation`; do not reveal fixture-resource IDs or hidden data.
+- All prices are integer synthetic units. Purchases must never overspend or charge twice for the same provider within an episode.
+- Hidden answers and fixtures belong in task data/server memory, never in prompts or tool schemas. Known resources without a fixture return `no_matching_data` after charging. Terminal calls must not mutate state.
+- The initial purchase tool collapses x402 authorization and retry into one action. It is not an HTTP adapter or x402 implementation.
+- No real purchases, wallet access, production changes, or paid compute. Ask before long GPU training runs or stopping existing GPU processes.
+- The default `metis` harness is the native MCP-capable `NullHarness`, with no shell tools. Always select `runtime.type=subprocess` locally; the framework defaults to Prime otherwise.
+- `MetisToolset._with_state` wraps a pinned private Verifiers hook to serialize the entire pull/call/push cycle. Preserve the concurrency and real MCP smoke tests when changing it. Stop hooks need an unparameterized `vf.Trace` annotation in this pin.
+- Saved native traces include private task data. Pass only model messages/observations to a policy; keep outputs, credentials, and local audit/tool state out of Git.
+- Code is MIT; `datasets/` is CC0. Model inference and weight updates remain untested; do not represent scripted results as model performance.

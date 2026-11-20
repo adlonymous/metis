@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")/.."
+uv run ruff check src tests
+uv run ruff format --check src tests
+uv run ty check src
+uv run pytest -q
+npm --prefix web run lint
+npm --prefix web test
+npm --prefix web run build
+uv run vf-validate paid_tool_rl -n 3 --only-setup --runtime.type subprocess
+uv run vf-validate paid_tool_rl -n 3 --only-noop --runtime.type subprocess
+uv run vf-validate metis -n 6 --only-setup --runtime.type subprocess
+uv run vf-validate metis -n 6 --only-noop --runtime.type subprocess
+scripts/smoke
