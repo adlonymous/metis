@@ -1,0 +1,24 @@
+# Replace this with the tool-capable model ID served by your endpoint.
+model = "replace-with-your-served-model"
+num_rollouts = 3
+max_concurrent = 2
+
+[client]
+type = "eval"
+base_url = "http://127.0.0.1:8000/v1"
+api_key_var = "METIS_API_KEY"
+
+[sampling]
+temperature = 0.0
+max_tokens = 1024
+parallel_tool_calls = false
+
+[env.taskset]
+id = "metis"
+split = "validation"
+
+[env.agent]
+max_turns = 16
+
+[env.agent.runtime]
+type = "subprocess"

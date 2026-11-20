@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")/.."
+schema=$(mktemp)
+trap 'rm -f "$schema"' EXIT
+uv run python - <<'PY' > "$schema"
+import json
+from paid_tool_rl.dataset_schema import AgentObservation
+from paid_tool_rl.dataset_server import WorkspaceEnvelope
+schema = WorkspaceEnvelope.model_json_schema(mode="serialization")
+observation = AgentObservation.model_json_schema(mode="serialization")
+schema["$defs"].update(observation.pop("$defs"))
+schema["$defs"]["AgentObservation"] = observation
+print(json.dumps(schema))
+PY
+./web/node_modules/.bin/json2ts --input "$schema" --output web/src/dataset-contract.d.ts --unreachableDefinitions
